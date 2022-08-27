@@ -1,17 +1,27 @@
-import React from 'react'
+import React from "react";
+import Image from "next/image";
 
-function MovieRow({titles}) {
-//    const genre = titles.genres.map((title)=> <h2 key={title.id}>{title.name}</h2>)
+const baseURL = "https://image.tmdb.org/t/p/original/";
 
-const filteredGenres = titles.genres.filter((genre)=> genre.id === 28  || genre.id === 16 || genre.id === 53);
-
-console.log(filteredGenres)
-const genre = filteredGenres.map((genre) => <h2 key={genre.id}>{genre.name}</h2>)
+function MovieRow({ movies, genre }) {
+  const crime = movies.results.map((movie) => (
+    <div key={movie.id}>
+      <Image
+        src={`${baseURL}${movie.poster_path}`}
+        alt={movie.title}
+        width={800}
+        height={500}
+      />
+    </div>
+  ));
   return (
     <div>
-        <section>{genre}</section>
+      <section>
+        <h2>{genre}</h2>
+        <div className="flex flex-row w-100">{crime}</div>
+      </section>
     </div>
-  )
+  );
 }
 
-export default MovieRow
+export default MovieRow;

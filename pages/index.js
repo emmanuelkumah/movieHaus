@@ -1,21 +1,38 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import MovieRow from "../components/MovieRow"
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import MovieRow from "../components/MovieRow";
 
-export const getStaticProps = async ()=>{
-  const res =  await  fetch("https://api.themoviedb.org/3/genre/movie/list?api_key=c58c4ef409f00bd5da3e27540adf8816&language=en-US");
-  const data = await res.json()
-
+export const getStaticProps = async () => {
+  //multiple parallel fetch request
+  const [crimeMovieRes, actionMovieRes, animationMovieRes] = await Promise.all([
+    fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=c58c4ef409f00bd5da3e27540adf8816&with_genres=80`
+    ),
+    fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=c58c4ef409f00bd5da3e27540adf8816&with_genres=28`
+    ),
+    fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=c58c4ef409f00bd5da3e27540adf8816&with_genres=16`
+    ),
+  ]);
+  const crimeMovieData = await crimeMovieRes.json();
+  const actionMovieData = await actionMovieRes.json();
+  const animeMovieData = await animationMovieRes.json();
   return {
-    props:{
-      genres: data
-    }
-  }
-}
+    props: {
+      crimeMovieData,
+      actionMovieData,
+      animeMovieData,
+    },
+  };
+};
 
-export default function Home({genres}) {
-  console.log(genres)
+export default function Home({
+  crimeMovieData,
+  actionMovieData,
+  animeMovieData,
+}) {
+  console.log("request", crimeMovieData, actionMovieData, animeMovieData);
   return (
     <div className={styles.container}>
       <Head>
@@ -25,13 +42,11 @@ export default function Home({genres}) {
       </Head>
 
       <main className={styles.main}>
-       <h2 className="text-3xl">Movie Haus </h2>
-       <MovieRow titles={genres}/>
-       
-       
+        <h2 className="text-3xl">Movie Haus </h2>
+        <MovieRow movies={crimeMovieData} genre="Crime" />
+        <MovieRow movies={animeMovieData} genre="Animation" />
+        <MovieRow movies={actionMovieData} genre="Action" />
       </main>
-
-      
     </div>
-  )
+  );
 }
