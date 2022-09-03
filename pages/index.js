@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import MovieRow from "../components/MovieRow";
+import MovieBanner from "../components/MovieBanner";
 
 export const getStaticProps = async () => {
   //multiple parallel fetch request
@@ -32,7 +33,7 @@ export default function Home({
   actionMovieData,
   animeMovieData,
 }) {
-  console.log("request", crimeMovieData, actionMovieData, animeMovieData);
+  // console.log("request", crimeMovieData, actionMovieData, animeMovieData);
   return (
     <div className={styles.container}>
       <Head>
@@ -43,6 +44,8 @@ export default function Home({
 
       <main className={styles.main}>
         <h2 className="text-3xl">Movie Haus </h2>
+        <MovieBanner banner={actionMovieData} />
+
         <MovieRow movies={crimeMovieData} genre="Crime" />
         <MovieRow movies={animeMovieData} genre="Animation" />
         <MovieRow movies={actionMovieData} genre="Action" />
